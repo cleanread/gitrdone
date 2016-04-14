@@ -411,22 +411,32 @@ Ship = function () {
   }
 
   this.shoot = function() {
-    for (var i = 0; i < this.bullets.length; i++) {
+	  
+	var counter=0;  
+	for (var j=0; counter<20; j+=(Math.random()-.5)*.5){  
+	counter++;
+	
+	var i=0;
+	
+    for ( ; i < this.bullets.length; i++) {
       if (!this.bullets[i].visible) {
         SFX.laser();
         var bullet = this.bullets[i];
-        var rad = ((this.rot-90) * Math.PI)/180;
+		
+        var rad = ((this.rot-90) * Math.PI)/180+j;
         var vectorx = Math.cos(rad);
         var vectory = Math.sin(rad);
         // move to the nose of the ship
         bullet.x = this.x + vectorx * 4;
         bullet.y = this.y + vectory * 4;
-        bullet.vel.x = 6 * vectorx + this.vel.x;
-        bullet.vel.y = 6 * vectory + this.vel.y;
+		var speed=Math.random()+1;
+        bullet.vel.x = (speed) * vectorx + this.vel.x;
+        bullet.vel.y = (speed) * vectory + this.vel.y;
         bullet.visible = true;
         break;
       }
     }
+	}
   }
 
   this.preMove = function (delta) {
@@ -454,7 +464,7 @@ Ship = function () {
     }
     if (KEY_STATUS.space) {
       if (this.delayBeforeBullet <= 0) {
-        this.delayBeforeBullet = 10;
+        this.delayBeforeBullet = 50;
         this.shoot();
       }
     }
@@ -633,7 +643,7 @@ Bullet = function () {
     if (this.visible) {
       this.time += delta;
     }
-    if (this.time > 50) {
+    if (this.time > 100) {
       this.visible = false;
       this.time = 0;
     }
@@ -1180,9 +1190,7 @@ $(function () {
   var coin = new Coin();
   coin.setup();
   sprites.push(coin);
-  Game.coin = coin;
-
-  var i, j = 0;
+  Game.coin = coin;  var i, j = 0;
 
   var paused = false;
   var showFramerate = false;
